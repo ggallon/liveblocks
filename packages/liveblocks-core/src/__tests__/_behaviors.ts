@@ -76,7 +76,7 @@ export function ALWAYS_AUTH_AS(actor: number, scopes: string[] = []) {
   return () => makeToken(actor, scopes);
 }
 
-export function ALWAYS_FAIL_AUTH(): never {
+export function AUTH_FAIL(): never {
   throw new Error("Random error, like 503 Service Unavailable or whatever");
 }
 

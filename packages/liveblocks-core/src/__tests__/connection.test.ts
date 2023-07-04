@@ -1,6 +1,6 @@
 import { ManagedSocket } from "../connection";
 import {
-  ALWAYS_FAIL_AUTH,
+  AUTH_FAIL,
   AUTH_SUCCESS,
   defineBehavior,
   SOCKET_AUTOCONNECT,
@@ -11,7 +11,7 @@ describe("ManagedSocket", () => {
   test("failure to authenticate", async () => {
     jest.useFakeTimers();
 
-    const { delegates } = defineBehavior(ALWAYS_FAIL_AUTH, SOCKET_NO_BEHAVIOR);
+    const { delegates } = defineBehavior(AUTH_FAIL, SOCKET_NO_BEHAVIOR);
 
     const didConnect = jest.fn();
     // const didDisconnect = jest.fn();
