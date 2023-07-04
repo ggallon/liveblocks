@@ -19,10 +19,10 @@ import { makeMinimalTokenPayload } from "./_utils";
 type AuthBehavior = () => ParsedAuthToken;
 type SocketBehavior = (wss: MockWebSocketServer) => MockWebSocket;
 
-function makeToken(actor: number, scopes: string[]): ParsedAuthToken {
+function makeToken(): ParsedAuthToken {
   return {
     raw: "<some fake JWT token>",
-    parsed: makeMinimalTokenPayload(actor, scopes),
+    parsed: makeMinimalTokenPayload(),
   };
 }
 
@@ -67,13 +67,11 @@ export function defineBehavior(
 //
 
 /**
- * Configures the authentication delegate to always successfully authorize as
- * user 1. This is the default auth behavior.
+ * Configures the authentication delegate to always successfully authorize.
+ * This is the default auth behavior.
  */
-export const AUTH_SUCCESS = ALWAYS_AUTH_AS(1);
-
-export function ALWAYS_AUTH_AS(actor: number, scopes: string[] = []) {
-  return () => makeToken(actor, scopes);
+export function AUTH_SUCCESS() {
+  return makeToken();
 }
 
 export function AUTH_FAIL(): never {

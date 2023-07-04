@@ -24,20 +24,13 @@ import { ServerMsgCode } from "../protocol/ServerMsg";
 import type { Room, RoomDelegates } from "../room";
 import { createRoom } from "../room";
 import { WebsocketCloseCodes } from "../types/IWebSocket";
-import {
-  ALWAYS_AUTH_AS,
-  defineBehavior,
-  SOCKET_AUTOCONNECT,
-} from "./_behaviors";
+import { AUTH_SUCCESS, defineBehavior, SOCKET_AUTOCONNECT } from "./_behaviors";
 import type { MockWebSocketServer } from "./_MockWebSocketServer";
 import { MockWebSocket } from "./_MockWebSocketServer";
 import type { JsonStorageUpdate } from "./_updatesUtils";
 import { serializeUpdateToJson } from "./_updatesUtils";
 
-export function makeMinimalTokenPayload(
-  actor: number,
-  scopes: string[]
-): MinimalTokenPayload {
+export function makeMinimalTokenPayload(): MinimalTokenPayload {
   // NOTE: This is not the complete JWT token, but one that has enough fields
   // to we can run the unit tests. The actual full shape of these JWT tokens is
   // defined in the (private) backend in case you're interested, see
@@ -48,8 +41,6 @@ export function makeMinimalTokenPayload(
     appId: "my-app",
     roomId: "my-room",
     id: "user1",
-    actor,
-    scopes,
   };
 }
 
@@ -111,12 +102,10 @@ export async function prepareRoomWithStorage<
   TRoomEvent extends Json
 >(
   items: IdTuple<SerializedCrdt>[],
-  actor: number = 0,
   onSend_DEPRECATED:
     | ((messages: ClientMsg<TPresence, TRoomEvent>[]) => void)
     | undefined = undefined,
-  defaultStorage?: TStorage,
-  scopes: string[] = []
+  defaultStorage?: TStorage
 ) {
   if (onSend_DEPRECATED !== undefined) {
     throw new Error(
@@ -124,10 +113,7 @@ export async function prepareRoomWithStorage<
     );
   }
 
-  const { wss, delegates } = defineBehavior(
-    ALWAYS_AUTH_AS(actor, scopes),
-    SOCKET_AUTOCONNECT
-  );
+  const { wss, delegates } = defineBehavior(AUTH_SUCCESS, SOCKET_AUTOCONNECT);
 
   const clonedItems = deepClone(items);
   wss.onConnection((conn) => {

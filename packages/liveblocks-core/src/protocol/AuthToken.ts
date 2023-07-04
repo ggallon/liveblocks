@@ -23,8 +23,9 @@ export type MinimalTokenPayload = {
   iat: number;
   exp: number;
 
-  scopes: string[]; // Think Scope[], but it could also hold scopes from the future, hence string[]
-  actor: number;
+  // NOTE: These fields used to exist here, but with 1.2 they no longer do.
+  scopes?: never; // XXX Remove field
+  actor?: never; // XXX Remove field
 
   // Extra payload as defined by the customer's own authorization
   id?: string;
