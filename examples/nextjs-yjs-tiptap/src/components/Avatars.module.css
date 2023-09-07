@@ -37,4 +37,5 @@
 
 .avatar_picture {
   border-radius: 9999px;
+  max-width: 100%;
 }
